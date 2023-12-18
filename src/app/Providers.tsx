@@ -1,16 +1,20 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { MantineProvider } from '@mantine/core'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { PropsWithChildren } from 'react'
 import { AuthProvider } from 'react-auth-kit'
-const queryClient = new QueryClient()
+import { queryClient } from 'utils'
+
 export const Providers = (props: PropsWithChildren) => {
     return (
-        <QueryClientProvider client={queryClient}>
-            <AuthProvider authType={'localstorage'}
-                authName={'_auth'}
-                cookieDomain={window.location.hostname}
-                cookieSecure={window.location.protocol === "https:"}>
-                {props.children}
-            </AuthProvider>
-        </QueryClientProvider>
+        <MantineProvider theme={{ primaryColor: 'teal' }}>
+            <QueryClientProvider client={queryClient}>
+                <AuthProvider authType={'cookie'}
+                    authName={'_auth'}
+                    cookieDomain={window.location.hostname}
+                    cookieSecure={window.location.protocol === "https:"}>
+                    {props.children}
+                </AuthProvider>
+            </QueryClientProvider>
+        </MantineProvider>
     )
 }

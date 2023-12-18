@@ -26,12 +26,11 @@ const DashboardHeader = ({ toggleColorScheme }: DashboardHeaderProps) => {
     </Header>
 }
 export const DashboardWrapper = (props: PropsWithChildren) => {
-    const [colorScheme, setColorScheme] = useState<ColorScheme>(localStorage.getItem('dark') as ColorScheme ?? 'dark');
+    const [colorScheme, setColorScheme] = useState<ColorScheme>(localStorage.getItem('colorScheme') as ColorScheme ?? 'dark');
     const toggleColorScheme = (value?: ColorScheme) =>
         setColorScheme(value || (colorScheme === 'dark' ? 'light' : 'dark'));
-        
+
     useEffect(() => {
-        console.log(colorScheme)
         localStorage.setItem('colorScheme', colorScheme)
     }, [colorScheme])
 
@@ -44,6 +43,9 @@ export const DashboardWrapper = (props: PropsWithChildren) => {
                         <NavLinks />
                     </Navbar>
                 }
+                sx={(theme) => ({
+                    backgroundColor: theme.colorScheme == 'dark' ? theme.colors.dark[8] : theme.colors.gray[1]
+                })}
             >
                 {props.children}
             </AppShell>

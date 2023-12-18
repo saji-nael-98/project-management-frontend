@@ -1,8 +1,13 @@
-import { Dashboard, Home, RoleList } from 'pages/Dashboard'
+import { Dashboard, Home, RoleCreatePage, RoleEditPage, RoleListPage } from 'pages/Dashboard'
 import { LoginPage } from 'pages/Login'
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { RouterProvider, createBrowserRouter, defer } from 'react-router-dom'
+import { getRolesQuery } from 'modules/Role/infrastructure'
 import { RequireAuth } from 'shared'
 import { Providers } from './Providers'
+import { Error } from 'pages/Error'
+import { queryClient } from 'utils'
+import { Root } from 'pages/Root'
+import { Unauthorized } from 'pages/Unauthorized'
 export const App = () => {
   const router = createBrowserRouter([
     {
@@ -11,10 +16,12 @@ export const App = () => {
     },
     {
       path: '/',
+      errorElement: <Error />,
+      element: <Root />,
       children: [
         {
           path: '',
-          element: <RequireAuth><Dashboard /></RequireAuth>,
+          element: <Dashboard />,
           children: [
             {
               index: true,
@@ -22,15 +29,37 @@ export const App = () => {
             },
             {
               path: 'roles',
-              element: <RoleList />
+              children: [
+                {
+                  index: true,
+                  element: <RequireAuth><RoleListPage /></RequireAuth>,
+                  loader: function () {
+                    return queryClient.fetchQuery({
+                      ...getRolesQuery()
+                    })
+                  }
+                },
+                {
+                  path: ':id',
+                  element: <RequireAuth><RoleEditPage /></RequireAuth>
+                },
+                {
+                  path: 'create',
+                  element: <RequireAuth><RoleCreatePage /></RequireAuth>
+                }
+              ]
             }
           ]
         },
 
       ]
+    },
+    {
+      path: 'unauthorized',
+      element: <Unauthorized />
     }
   ])
   return <Providers>
-    <RouterProvider router={router} />
+    <RouterProvider router={router} fallbackElement={<div>dasdasdasdasd</div>} />
   </Providers>
 }

@@ -18,6 +18,7 @@ export const LoginForm = () => {
         onSuccess(data, _variables, _context) {
             const token = data
             const decoded: JwtPayload & { userInfo: object } = jwtDecode((token as unknown) as string)
+            localStorage.setItem('token', (token as unknown) as string)
             signIn({
                 token: token, expiresIn: decoded.exp as number, tokenType: 'Brearer', authState: {
                     userInfo: decoded.userInfo
