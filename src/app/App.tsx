@@ -1,13 +1,12 @@
 import { Dashboard, Home, RoleCreatePage, RoleEditPage, RoleListPage } from 'pages/Dashboard'
-import { LoginPage } from 'pages/Login'
-import { RouterProvider, createBrowserRouter, defer } from 'react-router-dom'
-import { getRolesQuery } from 'modules/Role/infrastructure'
-import { RequireAuth } from 'shared'
-import { Providers } from './Providers'
 import { Error } from 'pages/Error'
-import { queryClient, resourceListLoader } from 'utils'
+import { LoginPage } from 'pages/Login'
 import { Root } from 'pages/Root'
 import { Unauthorized } from 'pages/Unauthorized'
+import { RouterProvider, createBrowserRouter } from 'react-router-dom'
+import { RequireAuth } from 'shared'
+import { resourceListLoader, resourceOneLoader } from 'utils'
+import { Providers } from './Providers'
 export const App = () => {
   const router = createBrowserRouter([
     {
@@ -37,7 +36,8 @@ export const App = () => {
                 },
                 {
                   path: ':id',
-                  element: <RequireAuth><RoleEditPage /></RequireAuth>
+                  element: <RequireAuth><RoleEditPage /></RequireAuth>,
+                  loader: resourceOneLoader('role')
                 },
                 {
                   path: 'create',

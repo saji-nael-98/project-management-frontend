@@ -8,12 +8,7 @@ export function getRolesQuery() {
 }
 export const useRolesQuery = ({ filters }: { filters?: { [key: string]: any } } = {}) => {
     return useGetList({
-        resource: 'role', filters,
-        options: {
-            staleTime: 5000,
-            refetchOnWindowFocus: false,
-            refetchInterval: 0   
-        }
+        resource: 'role', filters
     })
 }
 

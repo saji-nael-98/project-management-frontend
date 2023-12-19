@@ -14,7 +14,7 @@ export const RoleList = () => {
 
     const [pagination, setPagination] = useState({
         pageIndex: 0,
-        pageSize: 5, //customize the default page size
+        pageSize: 5
     });
     const { data, refetch } = useRolesQuery({
         filters: {
@@ -45,12 +45,15 @@ export const RoleList = () => {
         [],
     );
     useEffect(() => {
-        setFormatedColumnFilters(formatFilters(columnFilters))
-        const t = setTimeout(() => {
-            refetch()
-        }, 500)
-        return () => {
-            clearTimeout(t)
+        if (columnFilters.length) {
+            console.log(columnFilters)
+            setFormatedColumnFilters(formatFilters(columnFilters))
+            const t = setTimeout(() => {
+                refetch()
+            }, 500)
+            return () => {
+                clearTimeout(t)
+            }
         }
     }, [columnFilters])
 
@@ -79,10 +82,7 @@ export const RoleList = () => {
                     variant='filled'
                     color="red"
                     disabled={!table.getIsAllRowsSelected() && !table.getIsSomeRowsSelected()}
-                    onClick={() => {
-                        console.log(table.getState().rowSelection)
-                        console.log(table.getSelectedRowModel().rows)
-                    }}>
+                >
                     <IconTrash size="1rem" />
                 </ActionIcon>
             </Box>

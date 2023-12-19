@@ -1,8 +1,8 @@
-import React from 'react'
+import { useMutation } from '@tanstack/react-query'
 import { FormProvider, useForm } from 'react-hook-form'
-import { RoleModelForm } from '.'
-import { useMutation, useQuery } from '@tanstack/react-query'
 import { apiClient } from 'utils'
+import { RoleModelForm } from '.'
+import { useGetRole } from '../infrastructure/roleQuery'
 interface Props {
     id: number
 }
@@ -11,10 +11,8 @@ export const EditRoleForm = ({ id }: Props) => {
         mutationKey: ['resource', 'edit', 'role', id],
         mutationFn: (data) => apiClient.put('/resource/roles/' + id, data)
     })
-    const { data } = useQuery({
-        queryKey: ['resource', 'read', 'role', id],
-        queryFn: ({ signal }) => apiClient.get('/resource/role/' + id, { signal })
-    })
+    const { data } = useGetRole({ id })
+
     const form = useForm({
         values: data ?? {}
     })
