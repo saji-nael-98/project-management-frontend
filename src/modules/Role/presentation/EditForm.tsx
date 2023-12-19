@@ -13,7 +13,7 @@ export const EditRoleForm = ({ id }: Props) => {
     })
     const { data } = useQuery({
         queryKey: ['resource', 'read', 'role', id],
-        queryFn: ({ signal }) => apiClient.get('/resource/roles/' + id, { signal })
+        queryFn: ({ signal }) => apiClient.get('/resource/role/' + id, { signal })
     })
     const form = useForm({
         values: data ?? {}

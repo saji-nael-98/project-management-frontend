@@ -5,7 +5,7 @@ import { getRolesQuery } from 'modules/Role/infrastructure'
 import { RequireAuth } from 'shared'
 import { Providers } from './Providers'
 import { Error } from 'pages/Error'
-import { queryClient } from 'utils'
+import { queryClient, resourceListLoader } from 'utils'
 import { Root } from 'pages/Root'
 import { Unauthorized } from 'pages/Unauthorized'
 export const App = () => {
@@ -33,11 +33,7 @@ export const App = () => {
                 {
                   index: true,
                   element: <RequireAuth><RoleListPage /></RequireAuth>,
-                  loader: function () {
-                    return queryClient.fetchQuery({
-                      ...getRolesQuery()
-                    })
-                  }
+                  loader: resourceListLoader('role')
                 },
                 {
                   path: ':id',

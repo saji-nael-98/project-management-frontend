@@ -1,15 +1,28 @@
+import { ActionIcon, Box, Text } from '@mantine/core'
+import { IconTrash } from '@tabler/icons-react'
 import { MRT_ColumnDef, MRT_RowSelectionState, MantineReactTable, useMantineReactTable } from 'mantine-react-table'
 import { useEffect, useMemo, useState } from 'react'
-import { useSignOut } from 'react-auth-kit'
 import { Link } from 'react-router-dom'
-import { IRole } from '..'
+import { PageRequest } from 'types/PageRequest'
+import { formatFilters } from 'utils/filters'
 import { useRolesQuery } from '../infrastructure'
-import { ActionIcon, Box, Button, Text } from '@mantine/core'
-import { IconTrash } from '@tabler/icons-react'
+import { IRole } from '../types'
 export const RoleList = () => {
-    const signOut = useSignOut()
-    const { data, error } = useRolesQuery()
     const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
+    const [columnFilters, setColumnFilters] = useState([]);
+    const [formatedColumnFilters, setFormatedColumnFilters] = useState({});
+
+    const [pagination, setPagination] = useState({
+        pageIndex: 0,
+        pageSize: 5, //customize the default page size
+    });
+    const { data, refetch } = useRolesQuery({
+        filters: {
+            page: pagination.pageIndex,
+            limit: pagination.pageSize,
+            ...formatedColumnFilters
+        }
+    })
 
     const columns = useMemo<MRT_ColumnDef<IRole>[]>(
         () => [
@@ -31,13 +44,25 @@ export const RoleList = () => {
         ],
         [],
     );
+    useEffect(() => {
+        setFormatedColumnFilters(formatFilters(columnFilters))
+        const t = setTimeout(() => {
+            refetch()
+        }, 500)
+        return () => {
+            clearTimeout(t)
+        }
+    }, [columnFilters])
 
+    const response = (data as PageRequest)
     const table = useMantineReactTable({
-        data: (data as unknown) as IRole[] ?? [],
+        data: response.data as IRole[] ?? [],
         columns: columns,
         state: {
             density: 'xs',
-            rowSelection
+            rowSelection,
+            pagination,
+            columnFilters
         },
         enableDensityToggle: false,
         enableGlobalFilter: false,
@@ -45,6 +70,9 @@ export const RoleList = () => {
         positionToolbarAlertBanner: 'bottom',
         enableRowSelection: true,
         onRowSelectionChange: setRowSelection,
+        manualFiltering: true, //turn off client-side filtering
+
+        onColumnFiltersChange: setColumnFilters, //hoist internal columnFilters state to your state
         renderTopToolbarCustomActions: ({ table }) => (
             <Box sx={{ display: 'flex', gap: '16px', padding: '4px' }}>
                 <ActionIcon
@@ -61,10 +89,13 @@ export const RoleList = () => {
         ),
         mantineTableContainerProps: { sx: { minHeight: 'auto' } },
         mantineSelectCheckboxProps: { size: 'sm' },
-
+        onPaginationChange: setPagination,
+        rowCount: response.totalRecords, //you can tell the pagination how many rows there are in your back-end data
 
     })
     return (
-        <MantineReactTable table={table} />
+        <>
+            <MantineReactTable table={table} />
+        </>
     )
 }
