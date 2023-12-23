@@ -35,7 +35,8 @@ export const DashboardWrapper = (props: PropsWithChildren) => {
     }, [colorScheme])
 
     return (
-        <MantineProvider theme={{ colorScheme: colorScheme, primaryColor: 'teal' }} withGlobalStyles withNormalizeCSS>
+        <MantineProvider theme={{ colorScheme , primaryColor:'teal'}}>
+
             <AppShell
                 header={<DashboardHeader toggleColorScheme={toggleColorScheme} />}
                 navbar={

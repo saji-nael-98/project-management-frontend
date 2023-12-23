@@ -1,14 +1,12 @@
-import { apiClient, useGetList } from "utils"
-export function getRolesQuery() {
-    return {
-        queryKey: ['resource', 'role'],
-        queryFn: () => apiClient.get('/resource/roles')
-    }
+import { keepPreviousData } from '@tanstack/react-query';
+import { useGetList } from "utils"
+import { ROLES_RESOURCE } from "utils/constant"
 
-}
 export const useRolesQuery = ({ filters }: { filters?: { [key: string]: any } } = {}) => {
     return useGetList({
-        resource: 'role', filters
+        resource: ROLES_RESOURCE, filters, options: {
+            placeholderData: keepPreviousData
+        }
     })
 }
 

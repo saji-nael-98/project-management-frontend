@@ -1,13 +1,10 @@
-import { useMutation } from '@tanstack/react-query'
 import { FormProvider, useForm } from 'react-hook-form'
-import { apiClient } from 'utils'
+import { useSaveOne } from 'utils/query'
+import { ROLES_RESOURCE } from 'utils/constant'
 import { RoleModelForm } from '.'
 
 export const CreateRoleForm = () => {
-    const { isSuccess, mutate } = useMutation({
-        mutationKey: ['resource', 'create', 'role'],
-        mutationFn: (data) => apiClient.post('/resource/roles', data)
-    })
+    const { isSuccess, mutate } = useSaveOne(ROLES_RESOURCE)
     const form = useForm({
 
     })

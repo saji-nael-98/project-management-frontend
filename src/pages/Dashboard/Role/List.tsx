@@ -1,24 +1,22 @@
-import { Button, Group, Text } from '@mantine/core'
+import { Button, Group, SimpleGrid, Text, TextInput } from '@mantine/core'
+import { IconPlus } from '@tabler/icons-react'
 import { RoleList } from 'modules/Role/presentation'
-import React, { useEffect } from 'react'
-import { useSignOut } from 'react-auth-kit'
 import { Link } from 'react-router-dom'
+import { RequireAuth } from 'shared'
 
-export const RoleListPage = () => {
-  const signOut = useSignOut()
-  useEffect(() => {
-    // signOut()
-  }, [])
+const RoleListPage = () => {
   return (
-    <>
-      <Group position='apart' my='md'>
-        <Text fz="lg" fw={500}>Role</Text>
-        <Button size='md' compact component={Link} to={'create'}>
-          Create
-        </Button>
+    <RequireAuth>
+      <Group position='apart'>
+        <Text fz="lg" c='white'>Roles</Text>
+        <Button leftIcon={<IconPlus />} component={Link} to='create'>Create</Button>
       </Group>
+      <SimpleGrid cols={4} spacing="xs" verticalSpacing="xs" my='md'>
+        <div><TextInput size='sm' label='Role' placeholder='Role' /></div>
+      </SimpleGrid>
       <RoleList />
-    </>
+    </RequireAuth>
   )
 }
 
+export const Component = RoleListPage

@@ -1,12 +1,11 @@
+import { notifications } from '@mantine/notifications'
 import { AxiosResponse, InternalAxiosRequestConfig } from 'axios'
-import React, { useEffect, useState } from 'react'
-import { useSignOut } from 'react-auth-kit'
+import { useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { apiClient } from 'utils'
 
 export const Root = () => {
     const navigate = useNavigate()
-    const signOut = useSignOut()
     const [isSet, setIsSet] = useState<boolean>(false)
     useEffect(() => {
         function responseHandler(response: AxiosResponse<any, any>): AxiosResponse<any, any> {
@@ -24,6 +23,12 @@ export const Root = () => {
             if (error.response.status == 401) {
                 navigate('/unauthorized', {
                     replace: true
+                })
+            } else {
+                notifications.show({
+                    title: error.response.data.title ?? "Error",
+                    message: error.response.data.detail,
+                    color: 'red'
                 })
             }
             return Promise.reject(error);

@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query'
 import { JwtPayload, jwtDecode } from 'jwt-decode'
 import { useSignIn } from 'react-auth-kit'
 import { useForm } from 'react-hook-form'
-import { apiClient } from 'utils'
+import { apiClient } from 'utils/axios'
 export const LoginForm = () => {
     const signIn = useSignIn()
     const { handleSubmit } = useForm({
@@ -18,9 +18,8 @@ export const LoginForm = () => {
         onSuccess(data, _variables, _context) {
             const token = data
             const decoded: JwtPayload & { userInfo: object } = jwtDecode((token as unknown) as string)
-            localStorage.setItem('token', (token as unknown) as string)
             signIn({
-                token: token, expiresIn: decoded.exp as number, tokenType: 'Brearer', authState: {
+                token: token, expiresIn: decoded.exp as number, tokenType: 'Bearer', authState: {
                     userInfo: decoded.userInfo
                 }
             })

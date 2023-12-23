@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
 import { FormProvider, useForm } from 'react-hook-form'
-import { apiClient } from 'utils'
+import { apiClient } from 'utils/axios'
 import { RoleModelForm } from '.'
 import { useGetRole } from '../infrastructure/roleQuery'
 interface Props {

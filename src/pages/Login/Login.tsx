@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useIsAuthenticated } from 'react-auth-kit'
 import { useNavigate } from 'react-router-dom'
 
-export const LoginPage = () => {
+const LoginPage = () => {
     const navigate = useNavigate()
     const isUserSignedIn = useIsAuthenticated()
     useEffect(() => {
@@ -20,3 +20,5 @@ export const LoginPage = () => {
         </Flex>
     )
 }
+
+export const Component = LoginPage
