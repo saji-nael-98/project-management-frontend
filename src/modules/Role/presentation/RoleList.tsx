@@ -8,6 +8,7 @@ import { RESOURCES } from 'utils/constant'
 import { formatFilters } from 'utils/filters'
 import { usePaginatedList } from 'utils/query'
 import { IRole } from '../types'
+import { useGetList } from 'utils/query/infrastructure'
 export const RoleList = () => {
     const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
     const [columnFilters, setColumnFilters] = useState([]);
@@ -17,12 +18,19 @@ export const RoleList = () => {
         pageIndex: 0,
         pageSize: 5
     });
-    const { data, isLoading, isFetching } = usePaginatedList({
-        resource: RESOURCES.ROLES, filters: {
+    const { data, isLoading, isFetching } =useGetList({
+        resource: 'ROLES',
+        filters: {
             page: pagination.pageIndex,
             limit: pagination.pageSize
         }
     })
+    // const { data, isLoading, isFetching } = usePaginatedList({
+    //     resource: RESOURCES.ROLES, filters: {
+    //         page: pagination.pageIndex,
+    //         limit: pagination.pageSize
+    //     }
+    // })
     const columns = useMemo<MRT_ColumnDef<IRole>[]>(
         () => [
             {

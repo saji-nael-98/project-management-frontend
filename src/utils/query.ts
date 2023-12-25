@@ -4,6 +4,11 @@ import { LoaderFunctionArgs } from "react-router-dom";
 import { notifications } from "@mantine/notifications";
 
 export const queryClient = new QueryClient({})
+interface IQueryProps {
+    filters?: object
+    options?: UseQueryOptions
+}
+type RESOURCE_TYPES = 'resource' | 'sub-resource'
 // useGet
 interface UseGetProps {
     resource: string;
@@ -16,7 +21,6 @@ interface UseGetProps {
 interface UseGetOneProps extends UseGetProps {
     id: any
 }
-
 export function useGetOne({ id, resource, filters, options }: UseGetOneProps) {
     return useOptimizedUseQuery({
         queryKey: ['resource', resource, 'read', id.toString()],
@@ -41,10 +45,27 @@ const defaultParams = {
     page: 0,
     limit: 2
 }
-export function useGetList({ resource, options, filters }: UseGetProps) {
+
+interface UseGetResourceListProps extends UseGetListProps {
+    type: 'resource'
+}
+interface UseGetSubResourceListProps extends UseGetListProps {
+    type: 'sub-resource'
+    resourceId: number
+    subResource: string
+}
+export function useGetList({ options, filters, ...props }: (UseGetResourceListProps | UseGetSubResourceListProps) & IQueryProps) {
+    if (props?.customMethod) {
+        if (props.type == 'resource') {
+
+        } else {
+
+        }
+    }
+    
     return useOptimizedUseQuery({
-        queryKey: ['resource', resource, 'list'],
-        queryFn: ({ signal }) => apiClient.get(`/resource/${resource}`, { signal, params: { resource, ...filters } }),
+        queryKey: ['resource', props.resource, 'list'],
+        queryFn: ({ signal }) => apiClient.get(`/resource/${props.resource}`, { signal, params: { resource: props.resource, ...filters } }),
         ...options,
     })
 }

@@ -8,6 +8,8 @@ import { notifications } from '@mantine/notifications'
 import { Dashboard } from 'pages/Dashboard'
 import { Error } from 'pages/Error'
 import { Unauthorized } from 'pages/Unauthorized'
+import { RESOURCES } from 'utils/constant'
+import { CreatePermissionForm } from 'modules/Permission/presentation'
 const AppWrapper = () => {
   const getToken = useAuthHeader()
   const navigate = useNavigate()
@@ -77,11 +79,24 @@ export const App = () => {
                       lazy: () => import('pages/Dashboard/Role/List')
                     },
                     {
-                      path:'create',
+                      path: 'create',
                       lazy: () => import('pages/Dashboard/Role/Create')
                     }
                   ]
                 },
+                {
+                  path: RESOURCES.PERMISSIONS,
+                  children: [
+                    {
+                      index: true,
+                      lazy: () => import('pages/Dashboard/Permission/List')
+                    },
+                    {
+                      path: 'create',
+                      element: <CreatePermissionForm />
+                    }
+                  ]
+                }
               ]
             }
           ]

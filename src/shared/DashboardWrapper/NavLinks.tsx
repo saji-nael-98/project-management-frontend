@@ -1,8 +1,7 @@
 import { NavLink, Stack, Text } from '@mantine/core'
-import { IconHome2, IconUsers } from '@tabler/icons-react'
+import { IconHome2, IconShield, IconTie } from '@tabler/icons-react'
 import { Fragment, useMemo } from 'react'
 import { NavLink as RouterNavLink } from 'react-router-dom'
-import { UserInfoIcons } from 'shared/UserInfoIcons'
 const NavLinks = () => {
     const links = useMemo(() => ([
         {
@@ -13,7 +12,12 @@ const NavLinks = () => {
         {
             path: '/roles',
             label: 'Roles',
-            icon: <IconUsers size="1rem" stroke={1.5} />
+            icon: <IconTie size="1rem" stroke={1.5} />
+        },
+        {
+            path: '/permissions',
+            label: 'Permissions',
+            icon: <IconShield size="1rem" stroke={1.5} />
         }
     ]), [])
     return (
