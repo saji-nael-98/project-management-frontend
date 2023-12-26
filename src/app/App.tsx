@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react'
-import { useAuthHeader } from 'react-auth-kit'
-import { Outlet, RouterProvider, createBrowserRouter, useNavigate } from 'react-router-dom'
-import { Providers } from './Providers'
-import { apiClient } from 'utils/axios'
-import { AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import { notifications } from '@mantine/notifications'
+import { AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import { CreatePermissionForm } from 'modules/Permission/presentation'
 import { Dashboard } from 'pages/Dashboard'
 import { Error } from 'pages/Error'
 import { Unauthorized } from 'pages/Unauthorized'
-import { RESOURCES } from 'utils/constant'
-import { CreatePermissionForm } from 'modules/Permission/presentation'
+import { useEffect, useState } from 'react'
+import { useAuthHeader } from 'react-auth-kit'
+import { Outlet, RouterProvider, createBrowserRouter, useNavigate } from 'react-router-dom'
+import { apiClient } from 'utils/axios'
+import { RESOURCES, SUBRESOURCE } from 'utils/constant'
+import { Providers } from './Providers'
 const AppWrapper = () => {
   const getToken = useAuthHeader()
   const navigate = useNavigate()
@@ -81,11 +81,15 @@ export const App = () => {
                     {
                       path: 'create',
                       lazy: () => import('pages/Dashboard/Role/Create')
+                    },
+                    {
+                      path: ':id',
+                      lazy: () => import('pages/Dashboard/Role/Edit')
                     }
                   ]
                 },
                 {
-                  path: RESOURCES.PERMISSIONS,
+                  path: SUBRESOURCE[RESOURCES.ROLES].PERMISSIONS,
                   children: [
                     {
                       index: true,
@@ -94,7 +98,8 @@ export const App = () => {
                     {
                       path: 'create',
                       element: <CreatePermissionForm />
-                    }
+                    },
+
                   ]
                 }
               ]

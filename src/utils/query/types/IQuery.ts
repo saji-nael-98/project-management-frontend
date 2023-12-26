@@ -1,10 +1,9 @@
 import { UseQueryOptions as QueryOptions } from "@tanstack/react-query"
-import { RESOURCES, SUBRESOURCE } from "utils/constant"
+import { RESOURCES, RESOURCES_TYPE, SUBRESOURCE } from "utils/constant"
 interface UseQueryOptions extends Partial<QueryOptions> {
 
 }
 
-type RESOURCES_TYPE = 'resource' | 'sub-resource'
 export interface IQuery {
     filters?: object
     options?: UseQueryOptions
