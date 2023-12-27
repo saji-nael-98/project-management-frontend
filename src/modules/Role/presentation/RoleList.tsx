@@ -4,11 +4,9 @@ import { MRT_ColumnDef, MRT_RowSelectionState, MantineReactTable, useMantineReac
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PageRequest } from 'types/PageRequest'
-import { RESOURCES } from 'utils/constant'
 import { formatFilters } from 'utils/filters'
-import { usePaginatedList } from 'utils/query'
-import { IRole } from '../types'
 import { useGetList } from 'utils/query/infrastructure'
+import { IRole } from '../types'
 export const RoleList = () => {
     const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
     const [columnFilters, setColumnFilters] = useState([]);
@@ -18,7 +16,8 @@ export const RoleList = () => {
         pageIndex: 0,
         pageSize: 5
     });
-    const { data, isLoading, isFetching } =useGetList({
+    const { data, isLoading, isFetching } = useGetList({
+        type: 'resource',
         resource: 'ROLES',
         filters: {
             page: pagination.pageIndex,

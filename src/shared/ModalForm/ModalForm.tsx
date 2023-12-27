@@ -1,22 +1,22 @@
-import { Button, Group, Modal } from '@mantine/core'
+import { Button, Group, Modal, ScrollArea } from '@mantine/core'
 import { useDisclosure } from '@mantine/hooks'
-import { useEffect } from 'react'
+import { PropsWithChildren, useEffect } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { RoleForm } from '.'
 interface Props {
+    title: string
     handleValues: (data: any) => void
     isSuccess: boolean
 }
-export const RoleModelForm = ({ handleValues, isSuccess }: Props) => {
+export const ModalForm = ({ title, handleValues, isSuccess, children }: Props & PropsWithChildren) => {
     const form = useFormContext()
     const [opened, { open, close }] = useDisclosure(false);
     const navigate = useNavigate();
     const onCloseHandler = () => {
-        navigate('/roles', { replace: true });
+        navigate(-1);
         close()
     }
-    
+
     useEffect(() => {
         open()
     }, [])
@@ -26,8 +26,9 @@ export const RoleModelForm = ({ handleValues, isSuccess }: Props) => {
     }, [isSuccess])
 
     return (
-        <Modal opened={opened} onClose={onCloseHandler} title='Role'>
-            <RoleForm />
+        <Modal withinPortal opened={opened} onClose={onCloseHandler} title={title} scrollAreaComponent={ScrollArea.Autosize}
+        >
+            {children}
             <Group position='right' mt='md'>
                 <Button size='sm' onClick={form.handleSubmit(handleValues)}>Save</Button>
             </Group>

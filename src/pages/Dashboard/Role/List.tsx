@@ -11,7 +11,7 @@ const RoleListPage = () => {
         <Text fz="lg" c='white'>Roles</Text>
         <Button leftIcon={<IconPlus />} component={Link} to='create'>Create</Button>
       </Group>
-      <SimpleGrid cols={4} spacing="xs" verticalSpacing="xs" my='md'>
+      <SimpleGrid cols={4} spacing="xs" my='md'>
         <div><TextInput size='sm' label='Role' placeholder='Role' /></div>
       </SimpleGrid>
       <RoleList />

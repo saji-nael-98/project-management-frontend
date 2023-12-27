@@ -1,6 +1,7 @@
 import { FormProvider, useForm } from 'react-hook-form'
+import { ModalForm } from 'shared/ModalForm'
 import { useSave } from 'utils/mutation/infrastructure'
-import { RoleModelForm } from '.'
+import { RoleForm } from '.'
 
 export const CreateRoleForm = () => {
     const { mutate, isSuccess } = useSave({
@@ -14,12 +15,13 @@ export const CreateRoleForm = () => {
     })
 
     function handleValues(data: any) {
-        console.log(3)
         mutate(data)
     }
     return (
         <FormProvider {...form}>
-            <RoleModelForm isSuccess={isSuccess} handleValues={handleValues} />
+            <ModalForm title='Role' handleValues={handleValues} isSuccess={isSuccess} >
+                <RoleForm />
+            </ModalForm>
         </FormProvider>
     )
 }

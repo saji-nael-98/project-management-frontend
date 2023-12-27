@@ -1,9 +1,8 @@
-import { useMutation } from '@tanstack/react-query'
 import { FormProvider, useForm } from 'react-hook-form'
-import { apiClient } from 'utils/axios'
-import { RoleModelForm } from '.'
-import { useGetRole } from '../infrastructure/roleQuery'
+import { ModalForm } from 'shared/ModalForm'
 import { useSave } from 'utils/mutation/infrastructure'
+import { RoleForm } from '.'
+import { useGetRole } from '../infrastructure/roleQuery'
 interface Props {
     id: number
 }
@@ -25,7 +24,9 @@ export const EditRoleForm = ({ id }: Props) => {
     }
     return (
         <FormProvider {...form}>
-            <RoleModelForm isSuccess={isSuccess} handleValues={handleValues} />
+            <ModalForm title='Role' isSuccess={isSuccess} handleValues={handleValues} >
+                <RoleForm />
+            </ModalForm>
         </FormProvider>
     )
 }

@@ -1,9 +1,9 @@
 import { useMutation } from "@tanstack/react-query"
-import { IMutation, UseEditResource, UseSaveResource, UseSaveSubResource } from "../types"
+import { IMutation, UseEditResource, UseEditSubResource, UseSaveResource, UseSaveSubResource } from "../types"
 import { RESOURCES, SUBRESOURCE } from "utils/constant"
 import { apiClient } from "utils/axios"
 
-export const useSave = ({ options, resource, type, method, mutationType, ...props }: (UseSaveResource | UseSaveSubResource | UseEditResource) & IMutation) => {
+export const useSave = ({ options, resource, type, method, mutationType, ...props }: (UseSaveResource | UseSaveSubResource | UseEditSubResource | UseEditResource) & IMutation) => {
     if (!(resource in RESOURCES)) {
         throw Error("Invalid Resource: " + resource)
     }

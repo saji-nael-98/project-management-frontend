@@ -35,3 +35,9 @@ export interface UseEditResource extends SaveResource {
     resourceId: any
 }
 
+export interface UseEditSubResource extends SaveResource, SaveSubResouce {
+    mutationType: 'edit'
+    type: 'sub-resource'
+    resourceId: any
+}
+

@@ -1,9 +1,11 @@
-import { Autocomplete, Group, Paper } from '@mantine/core';
+import { Autocomplete, SimpleGrid } from '@mantine/core';
 import { useInputState } from '@mantine/hooks';
 import { IRole } from 'modules/Role/types';
 import { useMemo } from 'react';
-import { NoData } from 'shared/NoData';
 import { useGetList } from 'utils/query/infrastructure';
+import { PermissionCard } from './PermissionCard';
+import { NoData } from 'shared/NoData';
+import { PermissionDto } from '../types';
 
 export const PermissionList = () => {
     const [role, setRole] = useInputState('')
@@ -13,36 +15,40 @@ export const PermissionList = () => {
         resource: 'ROLES',
     })
 
-    const { data: authorizedTables } = useGetList({
+    const { data: authorizedTables, refetch } = useGetList({
         type: 'sub-resource',
         resource: 'ROLES',
         resourceId: role,
         subResource: 'PERMISSIONS',
         method: 'authorized-tables',
         options: {
-            enabled: !!role
+            enabled: !!role,
+            refetchOnWindowFocus: false,
         }
     })
-
+    const refetchAuthorizedTables = ()=>{
+        refetch()
+    }
     const roles = useMemo(() => (rolesData as unknown as IRole[])?.map((role: any) => role.name) ?? [], [rolesData])
 
     return (
-        <Paper mih={500} p={'md'} sx={(theme) => ({
-            backgroundColor: theme.colorScheme == 'light' ? theme.colors.white : theme.colors.dark[6]
-        })}>
-            <Group>
-                <Autocomplete
+        <>
+            <SimpleGrid cols={4} spacing="xs" verticalSpacing="xs" my='md'>
+                <div><Autocomplete
                     error={!role}
-                    variant='filled'
                     label="Select Role"
                     placeholder="Pick one"
                     value={role}
                     onChange={setRole}
                     data={roles}
-                />
-            </Group>
-            {!authorizedTables && < NoData />}
-            {(authorizedTables as [])?.length == 0 && < NoData />}
-        </Paper>
+                /></div>
+            </SimpleGrid>
+            {((!role || (authorizedTables && (authorizedTables as []).length == 0)) || (!role || !authorizedTables)) && <NoData />}
+            {(role && authorizedTables && (authorizedTables as []).length > 0) && <SimpleGrid cols={4} spacing="xs">
+                {(authorizedTables as PermissionDto[]).map(p => <div key={p.resource}>
+                    <PermissionCard refetchAuthorizedTables={refetchAuthorizedTables} data={p} />
+                </div>)}
+            </SimpleGrid>}
+        </>
     )
 }
