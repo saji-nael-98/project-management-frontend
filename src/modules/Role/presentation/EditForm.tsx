@@ -1,33 +1,36 @@
-import { FormProvider, useForm } from 'react-hook-form'
-import { ModalForm } from 'shared/ModalForm'
+import { useNavigate } from 'react-router-dom'
+import { EditRecordModal } from 'shared/CRUD'
 import { useSave } from 'utils/mutation/infrastructure'
 import { RoleForm } from '.'
+import { useRoleForm } from '../infrastructure'
 import { useGetRole } from '../infrastructure/roleQuery'
 interface Props {
     id: number
 }
 export const EditRoleForm = ({ id }: Props) => {
-    const { mutate, isSuccess } = useSave({
+    const navigate = useNavigate()
+    const { mutate } = useSave({
         type: 'resource',
         mutationType: 'edit',
         resource: 'ROLES',
         resourceId: id,
+        options: {
+            onSuccess(_data, _variables, _context) {
+                navigate(-1)
+            },
+        }
     })
-    const { data } = useGetRole({ id })
+    const { data, isFetched, isSuccess } = useGetRole({ id })
 
-    const form = useForm({
-        values: data ?? {}
-    })
+    const form = useRoleForm({ values: data ?? {} })
 
-    function handleValues(data: any) {
+    function valuesHandler(data: any) {
         mutate(data)
     }
     return (
-        <FormProvider {...form}>
-            <ModalForm title='Role' isSuccess={isSuccess} handleValues={handleValues} >
-                <RoleForm />
-            </ModalForm>
-        </FormProvider>
+        <EditRecordModal open={isFetched || isSuccess} form={form} title="Role" valuesHandler={valuesHandler}>
+            <RoleForm />
+        </EditRecordModal>
     )
 }
 

@@ -2,7 +2,7 @@ import { Autocomplete, Checkbox, Stack } from '@mantine/core'
 import React, { useEffect, useMemo } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { FormController } from 'shared'
-import { ModalForm } from 'shared/ModalForm'
+import { Modal } from 'shared/Modal'
 import { useSave } from 'utils/mutation/infrastructure'
 import { useGetList } from 'utils/query/infrastructure'
 
@@ -58,7 +58,7 @@ export const CreatePermissionForm: React.FC = () => {
 
   return (
     <FormProvider {...form}>
-      <ModalForm title={'Permision'} handleValues={valuesHandler} isSuccess={isSuccess}>
+      <Modal title={'Permision'} handleValues={valuesHandler} isSuccess={isSuccess}>
         <FormController name='role' render={({ field }) => <Autocomplete
           label="Role"
           placeholder="Pick one"
@@ -96,7 +96,7 @@ export const CreatePermissionForm: React.FC = () => {
             />} />
           </Stack>}
         </>}
-      </ModalForm>
+      </Modal>
     </FormProvider>
   )
 }

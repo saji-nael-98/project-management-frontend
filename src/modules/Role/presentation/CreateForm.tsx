@@ -1,28 +1,32 @@
-import { FormProvider, useForm } from 'react-hook-form'
-import { ModalForm } from 'shared/ModalForm'
+import { yupResolver } from "@hookform/resolvers/yup"
+import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import { CreateRecordModal } from "shared/CRUD"
 import { useSave } from 'utils/mutation/infrastructure'
-import { RoleForm } from '.'
+import { RoleForm, roleSchema } from '.'
+import { useRoleForm } from "../infrastructure"
 
 export const CreateRoleForm = () => {
-    const { mutate, isSuccess } = useSave({
+    const form = useRoleForm()
+    const navigate = useNavigate()
+    const { mutate } = useSave({
         type: 'resource',
         mutationType: 'create',
-        resource: 'ROLES'
+        resource: 'ROLES',
+        options: {
+            onSuccess(_data, _variables, _context) {
+                navigate(-1)
+            },
+        }
     })
-
-    const form = useForm({
-
-    })
-
-    function handleValues(data: any) {
+    function valuesHandler(data: any) {
         mutate(data)
     }
     return (
-        <FormProvider {...form}>
-            <ModalForm title='Role' handleValues={handleValues} isSuccess={isSuccess} >
-                <RoleForm />
-            </ModalForm>
-        </FormProvider>
+        <CreateRecordModal form={form} title="Role" valuesHandler={valuesHandler}>
+            <RoleForm />
+        </CreateRecordModal>
     )
-}
 
+
+}

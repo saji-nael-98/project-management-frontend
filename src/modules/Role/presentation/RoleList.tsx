@@ -7,16 +7,20 @@ import { PageRequest } from 'types/PageRequest'
 import { formatFilters } from 'utils/filters'
 import { useGetList } from 'utils/query/infrastructure'
 import { IRole } from '../types'
+import { useDelete } from 'utils/mutation/infrastructure'
 export const RoleList = () => {
     const [rowSelection, setRowSelection] = useState<MRT_RowSelectionState>({});
     const [columnFilters, setColumnFilters] = useState([]);
     const [formatedColumnFilters, setFormatedColumnFilters] = useState({});
-
+    const { mutateAsync } = useDelete({
+        type: 'resource',
+        resource: 'ROLES'
+    })
     const [pagination, setPagination] = useState({
         pageIndex: 0,
         pageSize: 5
     });
-    const { data, isLoading, isFetching } = useGetList({
+    const { data, isLoading, isFetching, refetch } = useGetList({
         type: 'resource',
         resource: 'ROLES',
         filters: {
@@ -35,8 +39,7 @@ export const RoleList = () => {
             {
                 accessorKey: 'id',
                 header: 'ID',
-                maxSize: 100,
-                size: 50,
+                size: 40,
                 Cell: ({ cell }) => (
                     <Text w={'100%'} display='block' component={Link} to={cell.getValue<number>().toLocaleString()}>
                         {cell.getValue<number>().toLocaleString()}
@@ -54,7 +57,7 @@ export const RoleList = () => {
 
     const response = (data as unknown) as PageRequest
     const table = useMantineReactTable({
-        data: response?.data ?? [],
+        data: response?.data as [] ?? [],
         columns: columns,
         state: {
             density: 'xs',
@@ -62,13 +65,14 @@ export const RoleList = () => {
             pagination,
             columnFilters,
             isLoading: isLoading || isFetching
+
         },
-        mantineSelectAllCheckboxProps: { width: 20 },
+        defaultColumn: { minSize: 40, maxSize: 150 },
+        enableColumnResizing: true,
         enableDensityToggle: false,
         enableGlobalFilter: false,
         enableFullScreenToggle: false,
         positionToolbarAlertBanner: 'bottom',
-        enableRowSelection: true,
         onRowSelectionChange: setRowSelection,
         manualFiltering: true, //turn off client-side filtering
         enableFilters: false,
@@ -79,16 +83,34 @@ export const RoleList = () => {
                     variant='filled'
                     color="red"
                     disabled={!table.getIsAllRowsSelected() && !table.getIsSomeRowsSelected()}
+                    onClick={async () => {
+                        const selected = Object.keys(rowSelection)?.filter(r => rowSelection[r])
+                        const ids = selected.map(i => ((response.data as [])[parseInt(i)]).id)
+                        await mutateAsync(ids)
+                        refetch()
+                    }}
                 >
                     <IconTrash size="1rem" />
                 </ActionIcon>
             </Box>
         ),
         mantineTableContainerProps: { sx: { minHeight: 'auto' } },
-        mantineSelectCheckboxProps: { size: 'sm' },
         onPaginationChange: setPagination,
         manualPagination: true,
         rowCount: response?.totalRecords ?? 0, //you can tell the pagination how many rows there are in your back-end data
+        mantineTableBodyRowProps: ({ row }) => ({
+            //implement row selection click events manually
+            onClick: () =>
+                setRowSelection((prev) => ({
+                    ...prev,
+                    [row.id]: !prev[row.id],
+                })),
+            selected: rowSelection[row.id],
+            sx: {
+                cursor: 'pointer',
+            },
+        }),
+
     })
     useEffect(() => {
         if (columnFilters.length) {

@@ -1,8 +1,9 @@
-import { useGetOne } from "utils/query"
-import { ROLES_RESOURCE } from "utils/constant"
+import { useGetOne } from "utils/query/infrastructure"
 
 export const useGetRole = ({ id }: { id: number }) => {
     return useGetOne({
-        id, resource: ROLES_RESOURCE
+        type: 'resource',
+        resource: 'ROLES',
+        resourceId: id
     })
 }

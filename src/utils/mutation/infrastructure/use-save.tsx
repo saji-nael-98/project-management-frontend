@@ -65,6 +65,7 @@ export const useSave = ({ options, resource, type, method, mutationType, ...prop
                     }
                 })
             }
-        }
+        },
+        ...options
     })
 }

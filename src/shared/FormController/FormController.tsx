@@ -1,3 +1,4 @@
+import { Text } from '@mantine/core';
 import React from 'react'
 import { Controller, ControllerFieldState, ControllerRenderProps, FieldValues, UseFormStateReturn, useFormContext } from 'react-hook-form';
 interface Props {
@@ -14,7 +15,9 @@ export const FormController = ({ name, render }: Props) => {
         throw Error('No FormProvider is provided.')
     }
     return (
-        <Controller control={formCtx.control} name={name} render={render} />
+        <>
+            <Controller control={formCtx.control} name={name} render={render} />
+        </>
     )
 }
 

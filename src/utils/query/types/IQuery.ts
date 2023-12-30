@@ -17,7 +17,6 @@ interface UseGetResource {
 
 interface UseGetSubResouce {
     subResource: keyof typeof SUBRESOURCE[keyof typeof SUBRESOURCE];
-    resourceId: any
 }
 
 export interface UseGetResourceList extends UseGetResource {
@@ -30,8 +29,10 @@ export interface UseGetSubResourceList extends UseGetResource, UseGetSubResouce 
 
 export interface UseGetOneResource extends UseGetResource {
     type: 'resource'
+    resourceId: any
 }
 export interface UseGetOneSubResource extends UseGetResource, UseGetSubResouce {
     type: 'sub-resource'
+    resourceId: any
     subResourceId: any
 }
